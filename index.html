@@ -1,30 +1,31 @@
-<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+ <iframe style="display: none;" src="https://mattdemarillac.github.io/notification-cors-test/"></iframe>
+        <script>
+            window.addEventListener("message", (event) => {
+                debugger;
+                // Do we trust the sender of this message?  (might be
+                // different from what we originally opened, for example).
+                if (event.origin !== "https://dev.elvanto.co")
+                    return;
 
-<script>
-    window.OneSignal = window.OneSignal || [];
-
-    OneSignal.push(function() {
-        OneSignal.init({
-            appId: '479e55fc-1858-4820-a4db-eba38ac7c72a'
-        });
-
-        // Re-add the onesignal userId id to storage on the event of worker deletion.
-        OneSignal.getUserId().then(function(userId) {
-
-            var onesignalUserId = {
-
-                onesignalUserId: userId
-            }
-
-            window.parent.postMessage(onesignalUserId, '*')
-        });
-        // When browser notification preference changes add the onesignal userId id to storage.
-        OneSignal.on('subscriptionChange', function (isSubscribed) {
-            if (isSubscribed) {
-                OneSignal.getUserId().then(function(userId) {
-                    window.parent.postMessage(onesignalUserId, '*')
-                });
-            }
-        });
-    });
-</script>
+                if (event.data.onesignalUserId) {
+                    axios
+                        .post(
+                            '/web-notifications/' + event.data.onesignalUserId,
+                            {
+                                platform: 'web',
+                                types: [
+                                    'group:messages',
+                                    // 'roster:schedule',
+                                    // 'roster:swap-replace',
+                                    // 'roster:reminder'
+                                ]
+                            },
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            }
+                        );
+                }
+            });
+        </script>
