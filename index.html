@@ -2,8 +2,8 @@
  var worker = new SharedWorker("https://mattdemarillac.github.io/notification-cors-test/shared.js");
             worker.port.start();
             worker.port.onmessage = function (e) {
+               debugger
                 data = e.data;
-                alert('wow such wow')
             };
 
 </script>
