@@ -1,31 +1,9 @@
- <iframe style="display: none;" src="https://dev.elvanto.co/onesignal-embed.php"></iframe>
-        <script>
-            window.addEventListener("message", (event) => {
-                debugger;
-                // Do we trust the sender of this message?  (might be
-                // different from what we originally opened, for example).
-                if (event.origin !== "https://dev.elvanto.co")
-                    return;
+<script>
+ var worker = new SharedWorker("https://mattdemarillac.github.io/notification-cors-test/shared.js");
+            worker.port.start();
+            worker.port.onmessage = function (e) {
+                data = e.data;
+                alert('wow such wow')
+            };
 
-                if (event.data.onesignalUserId) {
-                    axios
-                        .post(
-                            '/web-notifications/' + event.data.onesignalUserId,
-                            {
-                                platform: 'web',
-                                types: [
-                                    'group:messages',
-                                    // 'roster:schedule',
-                                    // 'roster:swap-replace',
-                                    // 'roster:reminder'
-                                ]
-                            },
-                            {
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            }
-                        );
-                }
-            });
-        </script>
+</script>
