@@ -1,0 +1,30 @@
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+
+<script>
+    window.OneSignal = window.OneSignal || [];
+
+    OneSignal.push(function() {
+        OneSignal.init({
+            appId: '479e55fc-1858-4820-a4db-eba38ac7c72a'
+        });
+
+        // Re-add the onesignal userId id to storage on the event of worker deletion.
+        OneSignal.getUserId().then(function(userId) {
+
+            var onesignalUserId = {
+
+                onesignalUserId: userId
+            }
+
+            window.parent.postMessage(onesignalUserId, '*')
+        });
+        // When browser notification preference changes add the onesignal userId id to storage.
+        OneSignal.on('subscriptionChange', function (isSubscribed) {
+            if (isSubscribed) {
+                OneSignal.getUserId().then(function(userId) {
+                    window.parent.postMessage(onesignalUserId, '*')
+                });
+            }
+        });
+    });
+</script>
